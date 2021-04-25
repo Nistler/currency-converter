@@ -1,0 +1,113 @@
+.convertation-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.quick-convert-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.convertation-fields {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.input {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: hsl(0, 0%, 100%);
+  border-color: hsl(0, 0%, 80%);
+  border-radius: 4px;
+  border-style: solid;
+  border-width: 1px;
+  cursor: default;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  min-height: 38px;
+  position: relative;
+  -webkit-transition: all 100ms;
+  transition: all 100ms;
+  box-sizing: border-box;
+}
+
+.input:hover {
+  border-color: #b3b3b3;
+
+}
+
+.input:focus {
+  border-color: #2684ff;
+  outline: 0;
+  box-shadow: 0 0 0 1px #2684ff;
+}
+
+.input-required {
+  position: absolute;
+  border: 0;
+  color: transparent;
+  background-color: transparent;
+  bottom: 1px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  z-index: 0;
+}
+
+.input-required:focus {
+  outline: none;
+}
+
+.reverse-btn {
+  width: 40px;
+}
+
+.convert-btn {
+  width: 100px;
+}
+
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  min-height: 10vh;
+  background: #616161;
+  color: white;
+}
+
+.nav-links {
+  width: 40%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  list-style: none;
+}
+
+.nav-link {
+  color: white;
+}
+
+@media (min-width: 600px) {
+  .convertation-form {
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+  .quick-convert-form {
+    flex-direction: row;
+    align-items: center;
+  }
+}
