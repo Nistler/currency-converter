@@ -5,8 +5,10 @@ import "../styles/Converter.css";
 import Nav from "./Nav";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import * as data from "../__fixtures__/data";
+import { defaultFavoriteCurrencies } from "../constants/main-currencies";
 import * as actions from "../actions";
 import { connect } from "react-redux";
+import Header from "./Header";
 
 const mapStateToProps = (state) => {
   return {
@@ -17,16 +19,22 @@ const mapStateToProps = (state) => {
 
 const actionCreators = {
   addBaseCurrency: actions.addBaseCurrency,
+  setFavorites: actions.setFavorites,
+  updateMainCurrency: actions.updateMainCurrency,
 };
 
-const App = ({ addBaseCurrency }) => {
+const App = ({ addBaseCurrency, setFavorites, updateMainCurrency }) => {
   useEffect(() => {
-    addBaseCurrency({ baseCurrency: data.usd });
-  }, [addBaseCurrency]);
+    // Должен быть запрос, основанный на состоянии из браузера
+    addBaseCurrency({ baseCurrency: data.eur });
+    setFavorites({ favorites: defaultFavoriteCurrencies });
+    updateMainCurrency({ mainCurrency: "EUR" });
+  }, [addBaseCurrency, setFavorites, updateMainCurrency]);
 
   return (
     <Router>
       <Nav />
+      <Header />
       <Switch>
         <Route path="/" exact component={Converter} />
         <Route path="/Rates" component={Rates} />

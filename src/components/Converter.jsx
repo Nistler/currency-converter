@@ -1,19 +1,21 @@
 import React from "react";
 import "../styles/Converter.css";
-import { timeStampToTime, twoDigits } from "../utils/normalization";
+import "../styles/currency-flags.css";
 import { connect } from "react-redux";
 import * as actions from "../actions/index";
-import { defaultFavoriteCurrencies } from "../constants/main-currencies";
 import { convertation, validation } from "../utils/calculations";
+import { twoDigits } from "../utils/normalization";
 import Select from "react-select";
 import { allSelectOptions } from "../constants/select-options";
-
+import * as labels from "../__fixtures__/data";
+import SingleRate from "./SingleRate"; // удалить!!
 //import { getCurrency } from "../services/ratesAPI";
 
 const mapStateToProps = (state) => {
   return {
     inputs: state.inputs,
     currencies: state.currencies,
+    ui: state.ui,
   };
 };
 
@@ -25,11 +27,15 @@ const actionCreators = {
   updateAmount: actions.updateAmount,
   executeConvertation: actions.executeConvertation,
   reverseCurrencies: actions.reverseCurrencies,
+  removeFavorite: actions.removeFavorite,
+  quickFormValid: actions.quickFormValid,
+  quickFormInvalid: actions.quickFormInvalid,
 };
 
 const Converter = ({
   inputs,
-  currencies: { baseCurrency },
+  currencies: { baseCurrency, favorites },
+  ui,
   updateQuickConvert,
   addBaseCurrency,
   updateMainCurrency,
@@ -37,18 +43,33 @@ const Converter = ({
   updateAmount,
   executeConvertation,
   reverseCurrencies,
+  removeFavorite,
+  quickFormValid,
+  quickFormInvalid,
 }) => {
+  const handleRemoveFavorites = ({ target }) =>
+    removeFavorite({ label: target.id });
+
+  const setNewTargetCurrency = ({ target }) =>
+    updateTargetCurrency({ targetCurrency: target.id });
+
   const renderRates = (rates) => {
     const entries = Object.entries(rates);
     const mainCurrencies = entries.filter(([currency]) =>
-      defaultFavoriteCurrencies.includes(currency)
+      favorites.includes(currency)
     );
 
     const mapping = (currencies) =>
       currencies.map(([currency, rate]) => (
-        <div key={currency}>
-          {currency}: {rate}
-        </div>
+        <SingleRate
+          key={currency}
+          id={currency}
+          currency={currency}
+          rate={rate}
+          favorite={true}
+          setNewTargetCurrency={setNewTargetCurrency}
+          favoriteAction={handleRemoveFavorites}
+        />
       ));
 
     return (
@@ -59,29 +80,72 @@ const Converter = ({
     );
   };
 
+  const customLabel = (value, label) => (
+    <div>
+      <span className={`currency-flag currency-flag-${value.toLowerCase()}`} />
+      <span>{label}</span>
+    </div>
+  );
+
+  const customValue = (currency) => {
+    if (!currency) {
+      return;
+    }
+    const index = allSelectOptions.findIndex(({ value }) => value === currency);
+    return (
+      <div>
+        <span
+          className={`currency-flag currency-flag-${currency.toLowerCase()}`}
+        />
+        <span>{allSelectOptions[index].label}</span>
+      </div>
+    );
+  };
+
   const handleQuickInput = ({ target }) => {
     updateQuickConvert({ text: target.value });
   };
 
-  const handleQuickForm = (e) => {
-    e.preventDefault();
-    const data = inputs.text.split(" ");
-    if (validation(data)) {
-      updateAmount({ amount: data[0] });
-      updateMainCurrency({ mainCurrency: data[1].toUpperCase() }); // необходим запрос
-      updateTargetCurrency({ targetCurrency: data[3].toUpperCase() });
+  const handleQuickForm = async (e) => {
+    if (e) {
+      e.preventDefault();
     }
+    const data = inputs.text.split(" ");
+    if (!validation(data)) {
+      quickFormInvalid();
+      return;
+    }
+    quickFormValid();
+    const amount = data[0];
+    const mainCurrency = data[1].toUpperCase();
+    const targetCurrency = data[3].toUpperCase();
+    updateAmount({ amount });
+    const { conversion_rates } = await handleUpdateMainCurrency({
+      value: mainCurrency,
+    });
+    updateTargetCurrency({ targetCurrency });
+    const convertationResult = twoDigits(
+      convertation(amount, conversion_rates[targetCurrency])
+    );
+    executeConvertation({ convertationResult });
   };
 
   const handleUpdateMainCurrency = async ({ value }) => {
     updateMainCurrency({ mainCurrency: value });
-    // !! Запрос работает !!
-    //const newBaseCurrency = await getCurrency(value);
-    //addBaseCurrency({ baseCurrency: newBaseCurrency });
+    //const newBaseCurrency = await getCurrency(value); // !! Запрос работает !!
+    const newBaseCurrency = labels[value.toLowerCase()];
+    addBaseCurrency({ baseCurrency: newBaseCurrency });
+    return newBaseCurrency;
   };
 
-  const handleUpdateAmount = (e) => {
-    updateAmount({ amount: e.target.value });
+  const handleUpdateAmount = ({ target }) => {
+    const points = target.value
+      .split("")
+      .reduce((counter, char) => (char === "." ? counter + 1 : counter), 0);
+    if (!target.value.match(/^\d*\.?\d*$/) || points > 1) {
+      return;
+    }
+    updateAmount({ amount: target.value });
   };
 
   const handleUpdateTargetCurrency = ({ value }) => {
@@ -98,11 +162,17 @@ const Converter = ({
 
   const handleReverse = () => reverseCurrencies();
 
+  const selectOptions = [
+    ...allSelectOptions.map(({ value, label }) => {
+      return {
+        value,
+        label: customLabel(value, label),
+      };
+    }),
+  ];
+
   return (
     <>
-      <h1>{baseCurrency.base_code}</h1>
-      <h2>{baseCurrency.time_last_update_utc}</h2>
-      <h3>{timeStampToTime(baseCurrency.time_last_update_unix)}</h3>
       {/* quick convertation form */}
       <form className="quick-convert-form" onSubmit={handleQuickForm}>
         <label
@@ -122,7 +192,8 @@ const Converter = ({
         />
         <input type="submit" value="Convert" />
       </form>
-      <div>&nbsp;</div>
+      {ui.quickForm === "invalid" ? "Enter valid request" : <div>&nbsp;</div>}
+
       {/* convertation form */}
       <form className="convertation-form" onSubmit={handleConvert}>
         <div className="convertation-fields">
@@ -155,11 +226,11 @@ const Converter = ({
             onChange={handleUpdateMainCurrency}
           />
           <Select
-            options={allSelectOptions}
+            options={selectOptions}
             required={true}
             value={{
               value: inputs.mainCurrency,
-              label: inputs.mainCurrency,
+              label: customValue(inputs.mainCurrency),
             }}
             onChange={handleUpdateMainCurrency}
           />
@@ -186,11 +257,11 @@ const Converter = ({
             onChange={handleUpdateTargetCurrency}
           />
           <Select
-            options={allSelectOptions}
+            options={selectOptions}
             required={true}
             value={{
               value: inputs.targetCurrency,
-              label: inputs.targetCurrency,
+              label: customValue(inputs.targetCurrency),
             }}
             onChange={handleUpdateTargetCurrency}
           />
@@ -200,7 +271,11 @@ const Converter = ({
           <input type="submit" value="Convert" />
         </div>
       </form>
-      {inputs.convertationResult}
+      {inputs.convertationResult ? (
+        inputs.convertationResult
+      ) : (
+        <div>&nbsp;</div>
+      )}
       {/* rates */}
       {renderRates(baseCurrency.conversion_rates)}
     </>

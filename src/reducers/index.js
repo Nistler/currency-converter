@@ -30,10 +30,10 @@ const inputs = handleActions(
   },
   {
     text: "",
-    targetCurrency: "",
+    targetCurrency: "USD",
     amount: "",
     mainCurrency: "",
-    convertationResult: 0,
+    convertationResult: null,
   }
 );
 
@@ -41,6 +41,21 @@ const currencies = handleActions(
   {
     [actions.addBaseCurrency](state, { payload: { baseCurrency } }) {
       return { ...state, baseCurrency };
+    },
+    [actions.setFavorites]({ baseCurrency }, { payload: { favorites } }) {
+      return { baseCurrency, favorites };
+    },
+    [actions.addFavorite]({ baseCurrency, favorites }, { payload: { label } }) {
+      return { baseCurrency, favorites: [...favorites, label] };
+    },
+    [actions.removeFavorite](
+      { baseCurrency, favorites },
+      { payload: { label } }
+    ) {
+      return {
+        baseCurrency,
+        favorites: favorites.filter((curr) => curr !== label),
+      };
     },
   },
   {
@@ -50,7 +65,20 @@ const currencies = handleActions(
       time_last_update_utc: "2021-04-24",
       conversion_rates: [],
     },
+    favorites: [],
   }
 );
 
-export default combineReducers({ inputs, currencies });
+const ui = handleActions(
+  {
+    [actions.quickFormValid]() {
+      return { quickForm: "valid" };
+    },
+    [actions.quickFormInvalid]() {
+      return { quickForm: "invalid" };
+    },
+  },
+  { quickForm: null }
+);
+
+export default combineReducers({ inputs, currencies, ui });
