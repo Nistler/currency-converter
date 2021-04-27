@@ -1,5 +1,5 @@
 import React from "react";
-import "../styles/Converter.css";
+import "../styles/App.css";
 import "../styles/currency-flags.css";
 import { connect } from "react-redux";
 import * as actions from "../actions/index";
@@ -8,6 +8,7 @@ import { twoDigits } from "../utils/normalization";
 import Select from "react-select";
 import { allSelectOptions } from "../constants/select-options";
 import * as labels from "../__fixtures__/data";
+import swapIcon from "../media/Swap.png";
 import SingleRate from "./SingleRate"; // удалить!!
 //import { getCurrency } from "../services/ratesAPI";
 
@@ -47,8 +48,10 @@ const Converter = ({
   quickFormValid,
   quickFormInvalid,
 }) => {
-  const handleRemoveFavorites = ({ target }) =>
+  const handleRemoveFavorites = ({ target }) => {
     removeFavorite({ label: target.id });
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  };
 
   const setNewTargetCurrency = ({ target }) =>
     updateTargetCurrency({ targetCurrency: target.id });
@@ -72,18 +75,13 @@ const Converter = ({
         />
       ));
 
-    return (
-      <>
-        <hr />
-        <div>{mapping(mainCurrencies)}</div>
-      </>
-    );
+    return <div>{mapping(mainCurrencies)}</div>;
   };
 
   const customLabel = (value, label) => (
     <div>
       <span className={`currency-flag currency-flag-${value.toLowerCase()}`} />
-      <span>{label}</span>
+      <span> {label}</span>
     </div>
   );
 
@@ -97,7 +95,7 @@ const Converter = ({
         <span
           className={`currency-flag currency-flag-${currency.toLowerCase()}`}
         />
-        <span>{allSelectOptions[index].label}</span>
+        <span> {allSelectOptions[index].label}</span>
       </div>
     );
   };
@@ -135,6 +133,7 @@ const Converter = ({
     //const newBaseCurrency = await getCurrency(value); // !! Запрос работает !!
     const newBaseCurrency = labels[value.toLowerCase()];
     addBaseCurrency({ baseCurrency: newBaseCurrency });
+    localStorage.setItem("baseCurrency", JSON.stringify(value));
     return newBaseCurrency;
   };
 
@@ -172,113 +171,186 @@ const Converter = ({
   ];
 
   return (
-    <>
-      {/* quick convertation form */}
-      <form className="quick-convert-form" onSubmit={handleQuickForm}>
-        <label
-          title="Enter the amount of base currency and currency to convert"
-          htmlFor="exchange"
-        >
-          Quick convertation
-        </label>
-        <input
-          id="exchange"
-          type="text"
-          className={"input"}
-          required
-          value={inputs.text}
-          onChange={handleQuickInput}
-          placeholder="1 EUR in USD"
-        />
-        <input type="submit" value="Convert" />
-      </form>
-      {ui.quickForm === "invalid" ? "Enter valid request" : <div>&nbsp;</div>}
+    <section>
+      <div className="row justify-content-md-center">
+        <div className="col col-lg-8">
+          <div className="card text-dark bg-light">
+            <div className="card-body">
+              {/* quick convertation form */}
+              <div className="row">
+                <form onSubmit={handleQuickForm}>
+                  <div className="row justify-content-md-center align-items-center">
+                    <div className="col-auto">
+                      <label
+                        title="Enter the amount of base currency and currency to convert"
+                        htmlFor="exchange"
+                      >
+                        Quick convertation
+                      </label>
+                    </div>
+                    <div className="col-sm">
+                      <input
+                        id="exchange"
+                        type="text"
+                        className="input form-control my-2"
+                        required
+                        value={inputs.text}
+                        onChange={handleQuickInput}
+                        placeholder="1 EUR in USD"
+                      />
+                    </div>
+                  </div>
+                  <div className="row justify-content-between">
+                    <div className="col-auto">
+                      {ui.quickForm === "invalid" ? (
+                        "Please, enter valid request"
+                      ) : (
+                        <div>&nbsp;</div>
+                      )}
+                    </div>
+                    <div className="col-auto">
+                      <input
+                        type="submit"
+                        className="btn btn-primary"
+                        value="Convert"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <hr />
+              {/* convertation form */}
+              <div className="row">
+                <form onSubmit={handleConvert}>
+                  <div className="row align-items-end justify-content-center">
+                    <div className="col-md">
+                      <label title="Enter the amount" htmlFor="amount">
+                        Amount
+                      </label>
+                      <input
+                        id="amount"
+                        type="text"
+                        className="input form-control my-2"
+                        required
+                        inputMode="decimal"
+                        value={inputs.amount}
+                        placeholder="1.00"
+                        onChange={handleUpdateAmount}
+                      />
+                    </div>
+                    <div className="col-md">
+                      <label
+                        title="Choose base currency"
+                        htmlFor="fromCurrency"
+                      >
+                        Base currency
+                      </label>
+                      <input
+                        className="input-required"
+                        type="text"
+                        value={inputs.mainCurrency}
+                        tabIndex={-1}
+                        autoComplete="off"
+                        required={true}
+                        onChange={handleUpdateMainCurrency}
+                      />
+                      <Select
+                        options={selectOptions}
+                        className="my-2"
+                        required={true}
+                        value={{
+                          value: inputs.mainCurrency,
+                          label: customValue(inputs.mainCurrency),
+                        }}
+                        onChange={handleUpdateMainCurrency}
+                      />
+                    </div>
 
-      {/* convertation form */}
-      <form className="convertation-form" onSubmit={handleConvert}>
-        <div className="convertation-fields">
-          <label title="Enter the amount" htmlFor="amount">
-            Amount
-          </label>
-          <input
-            id="amount"
-            type="text"
-            className={"input"}
-            required
-            inputMode="decimal"
-            value={inputs.amount}
-            placeholder="1.00"
-            onChange={handleUpdateAmount}
-          />
-        </div>
+                    <div className="col-auto">
+                      <button
+                        className="reverse-btn btn btn-primary my-2 rounded-circle swap-btn"
+                        onClick={handleReverse}
+                      >
+                        <img
+                          src={swapIcon}
+                          width="30px"
+                          height="30px"
+                          alt="Swap symbol"
+                        />
+                      </button>
+                    </div>
 
-        <div className="convertation-fields">
-          <label title="Choose base currency" htmlFor="fromCurrency">
-            Base currency
-          </label>
-          <input
-            className="input-required"
-            type="text"
-            value={inputs.mainCurrency}
-            tabIndex={-1}
-            autoComplete="off"
-            required={true}
-            onChange={handleUpdateMainCurrency}
-          />
-          <Select
-            options={selectOptions}
-            required={true}
-            value={{
-              value: inputs.mainCurrency,
-              label: customValue(inputs.mainCurrency),
-            }}
-            onChange={handleUpdateMainCurrency}
-          />
+                    <div className="col-md">
+                      <label
+                        title="Choose target currency"
+                        htmlFor="targetCurrency"
+                      >
+                        Target currency
+                      </label>
+                      <input
+                        className="input-required"
+                        type="text"
+                        value={inputs.targetCurrency}
+                        tabIndex={-1}
+                        autoComplete="off"
+                        required={true}
+                        onChange={handleUpdateTargetCurrency}
+                      />
+                      <Select
+                        options={selectOptions}
+                        required={true}
+                        className="my-2"
+                        value={{
+                          value: inputs.targetCurrency,
+                          label: customValue(inputs.targetCurrency),
+                        }}
+                        onChange={handleUpdateTargetCurrency}
+                      />
+                    </div>
+                  </div>
+                  <div className="row justify-content-between">
+                    <div className="col-auto">
+                      {inputs.convertationResult ? (
+                        inputs.convertationResult
+                      ) : (
+                        <div>&nbsp;</div>
+                      )}
+                    </div>
+                    <div className="col-auto">
+                      <input
+                        type="submit"
+                        value="Convert"
+                        className="btn btn-primary"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
-
-        <div className="convertation-fields">
-          <div>&nbsp;</div>
-          <button className="reverse-btn" onClick={handleReverse}>
-            {"<->"}
-          </button>
+      </div>
+      <div className="row justify-content-md-center">
+        <div className="col col-lg-8 mt-5">
+          {/* rates */}
+          <div className="card text-dark bg-light">
+            <div className="card-body">
+              <p className="h5 card-title text-center">Favorites</p>
+              <div className="row">
+                <div className="col-6">Currency</div>
+                <div className="col-3">
+                  <div>Rate</div>
+                </div>
+                <div className="col-3">
+                  <div className="text-end">Favorite</div>
+                </div>
+              </div>
+              {renderRates(baseCurrency.conversion_rates)}
+            </div>
+          </div>
         </div>
-
-        <div className="convertation-fields">
-          <label title="Choose target currency" htmlFor="targetCurrency">
-            Target currency
-          </label>
-          <input
-            className="input-required"
-            type="text"
-            value={inputs.targetCurrency}
-            tabIndex={-1}
-            autoComplete="off"
-            required={true}
-            onChange={handleUpdateTargetCurrency}
-          />
-          <Select
-            options={selectOptions}
-            required={true}
-            value={{
-              value: inputs.targetCurrency,
-              label: customValue(inputs.targetCurrency),
-            }}
-            onChange={handleUpdateTargetCurrency}
-          />
-        </div>
-        <div className="convertation-fields">
-          <div>&nbsp;</div>
-          <input type="submit" value="Convert" />
-        </div>
-      </form>
-      {inputs.convertationResult ? (
-        inputs.convertationResult
-      ) : (
-        <div>&nbsp;</div>
-      )}
-      {/* rates */}
-      {renderRates(baseCurrency.conversion_rates)}
-    </>
+      </div>
+    </section>
   );
 };
 

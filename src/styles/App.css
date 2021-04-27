@@ -1,18 +1,73 @@
-.convertation-form {
-  display: flex;
-  flex-direction: column;
+body {
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 
-.quick-convert-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+nav {
+  background-color: #191a1d;
 }
 
-.convertation-fields {
-  display: flex;
-  flex-direction: column;
+video {
+  object-fit: cover;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.header {
+  color: #8c8d8e;
+  text-align: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.footer {
+  background-color: #191a1d;
+  width: 100%;
+  height: 56px;
+  line-height: 56px;
+}
+
+main {
+  padding-top: 60px;
   position: relative;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #212529;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8c8d8e;
+  border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:window-inactive {
+  background: #8c8d8e;
+}
+.btn-add {
+  padding: 0 6px;
+}
+
+.btn-remove {
+  padding: 0 9px;
+}
+
+.rate-shadow {
+  background: #f3f3f3;
+  border-radius: 5px;
+}
+
+.swap-btn {
+  padding: 3px;
 }
 
 .input {
@@ -78,36 +133,23 @@
   width: 100px;
 }
 
-nav {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  align-items: center;
-  min-height: 10vh;
-  background: #616161;
-  color: white;
+.full-country-label {
+  display: none;
 }
 
-.nav-links {
-  width: 40%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  list-style: none;
-}
-
-.nav-link {
-  color: white;
-}
-
-@media (min-width: 600px) {
-  .convertation-form {
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
+@media (min-width: 768px) {
+  .swap-btn {
+    transform: rotate(90deg)
   }
-  .quick-convert-form {
-    flex-direction: row;
-    align-items: center;
+
+  .header {
+    text-align: end;
+    padding-top: 100px;
+  }
+}
+
+@media (min-width: 700px) {
+  .full-country-label {
+    display: inline;
   }
 }

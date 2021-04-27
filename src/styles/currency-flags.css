@@ -3,6 +3,8 @@
   width: 24px;
   height: 16px;
   background-size: cover;
+  position: relative;
+  top: 3px;
   background-image:url('https://wise.com/public-resources/assets/flags/rectangle_fallback.png');
 }
 

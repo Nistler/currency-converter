@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { timeStampToTime } from "../utils/normalization";
+import { countryByLabel } from "../constants/country-by-label";
 
 const mapStateToProps = (state) => {
   return {
@@ -11,12 +11,26 @@ const mapStateToProps = (state) => {
 const actionCreators = {};
 
 const Header = ({ currencies: { baseCurrency } }) => {
+  const { base_code, time_last_update_utc } = baseCurrency;
   return (
-    <>
-      <h1>{baseCurrency.base_code}</h1>
-      <h2>{baseCurrency.time_last_update_utc}</h2>
-      <h3>{timeStampToTime(baseCurrency.time_last_update_unix)}</h3>
-    </>
+    <section className="header">
+      <div className="row justify-content-md-center">
+        <div className="col col-lg-8">
+          <p className="h5">
+            Base currency:{" "}
+            <span className="text-light">
+              {base_code} - {countryByLabel[base_code]}
+            </span>
+          </p>
+          <p className="h6">
+            Exchange rates on{" "}
+            <span className="text-light">
+              {time_last_update_utc.slice(0, 25)}
+            </span>
+          </p>
+        </div>
+      </div>
+    </section>
   );
 };
 
