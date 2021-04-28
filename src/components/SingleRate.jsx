@@ -14,10 +14,10 @@ const SingleRate = ({
 }) => {
   const flagClasses = `currency-flag currency-flag-${currency.toLowerCase()}`;
   const disabled = favorites && favorites.includes(currency);
-  const action = favorite ? "-" : "+";
+  const action = favorite ? "Remove" : "Add";
   const actionBtnClasses = favorite
-    ? "btn btn-outline-danger btn-remove"
-    : "btn btn-outline-success btn-add";
+    ? "btn btn-danger btn-remove"
+    : "btn btn-success btn-add";
   return (
     <div className="row rate-shadow border text-dark bg-light align-items-center mt-3">
       <div className="col d-grid ps-0">

@@ -26,7 +26,6 @@ const actionCreators = {
   updateTargetCurrency: actions.updateTargetCurrency,
   updateAmount: actions.updateAmount,
   executeConvertation: actions.executeConvertation,
-  reverseCurrencies: actions.reverseCurrencies,
   removeFavorite: actions.removeFavorite,
   quickFormValid: actions.quickFormValid,
   quickFormInvalid: actions.quickFormInvalid,
@@ -42,7 +41,6 @@ const Converter = ({
   updateTargetCurrency,
   updateAmount,
   executeConvertation,
-  reverseCurrencies,
   removeFavorite,
   quickFormValid,
   quickFormInvalid,
@@ -146,6 +144,7 @@ const Converter = ({
 
   const handleUpdateTargetCurrency = ({ value }) => {
     updateTargetCurrency({ targetCurrency: value });
+    localStorage.setItem("targetCurrency", JSON.stringify(value));
   };
 
   const handleConvert = (e) => {
@@ -156,7 +155,12 @@ const Converter = ({
     executeConvertation({ convertationResult });
   };
 
-  const handleReverse = () => reverseCurrencies();
+  const handleReverse = async () => {
+    const main = inputs.mainCurrency;
+    const target = inputs.targetCurrency;
+    await handleUpdateMainCurrency({ value: target });
+    handleUpdateTargetCurrency({ value: main });
+  };
 
   const selectOptions = [
     ...allSelectOptions.map(({ value, label }) => {
@@ -196,21 +200,23 @@ const Converter = ({
                         placeholder="1 EUR in USD"
                       />
                     </div>
-                  </div>
-                  <div className="row justify-content-between">
-                    <div className="col-auto">
-                      {ui.quickForm === "invalid" ? (
-                        "Please, enter valid request"
-                      ) : (
-                        <div>&nbsp;</div>
-                      )}
-                    </div>
-                    <div className="col-auto">
+                    <div className="col-auto my-2">
                       <input
                         type="submit"
                         className="btn btn-primary"
                         value="Convert"
                       />
+                    </div>
+                  </div>
+                  <div className="row justify-content-between align-items-center">
+                    <div className="col-auto">
+                      {ui.quickForm === "invalid" ? (
+                        <div className="text-danger">
+                          Please, enter valid request
+                        </div>
+                      ) : (
+                        <div>&nbsp;</div>
+                      )}
                     </div>
                   </div>
                 </form>
@@ -240,7 +246,7 @@ const Converter = ({
                         title="Choose base currency"
                         htmlFor="fromCurrency"
                       >
-                        Base currency
+                        From
                       </label>
                       <input
                         className="input-required"
@@ -282,7 +288,7 @@ const Converter = ({
                         title="Choose target currency"
                         htmlFor="targetCurrency"
                       >
-                        Target currency
+                        To
                       </label>
                       <input
                         className="input-required"
@@ -305,15 +311,29 @@ const Converter = ({
                       />
                     </div>
                   </div>
-                  <div className="row justify-content-between">
+                  <div className="row justify-content-between align-items-center">
                     <div className="col-auto">
                       {inputs.convertationResult ? (
-                        inputs.convertationResult
+                        <div>
+                          <div className="text-success fs-4">
+                            {inputs.amount} {inputs.mainCurrency} ={" "}
+                            {inputs.convertationResult} {inputs.targetCurrency}
+                          </div>
+                          <div className="text-muted">
+                            1 {inputs.mainCurrency} ={" "}
+                            {
+                              baseCurrency.conversion_rates[
+                                inputs.targetCurrency
+                              ]
+                            }{" "}
+                            {inputs.targetCurrency}
+                          </div>
+                        </div>
                       ) : (
                         <div>&nbsp;</div>
                       )}
                     </div>
-                    <div className="col-auto">
+                    <div className="col-auto my-3">
                       <input
                         type="submit"
                         value="Convert"

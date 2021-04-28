@@ -20,8 +20,6 @@ export const updateAmount = createAction("INPUT_AMOUNT_UPDATE");
 
 export const executeConvertation = createAction("CONVERTATION");
 
-export const reverseCurrencies = createAction("REVERSE_CURRENCIES");
-
 export const quickFormValid = createAction("FORM_VALID");
 
 export const quickFormInvalid = createAction("FORM_INVALID");

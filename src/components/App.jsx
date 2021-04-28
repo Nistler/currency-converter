@@ -25,9 +25,15 @@ const actionCreators = {
   addBaseCurrency: actions.addBaseCurrency,
   setFavorites: actions.setFavorites,
   updateMainCurrency: actions.updateMainCurrency,
+  updateTargetCurrency: actions.updateTargetCurrency,
 };
 
-const App = ({ addBaseCurrency, setFavorites, updateMainCurrency }) => {
+const App = ({
+  addBaseCurrency,
+  setFavorites,
+  updateMainCurrency,
+  updateTargetCurrency,
+}) => {
   useEffect(() => {
     async function request() {
       let localStorageFavorites = JSON.parse(localStorage.getItem("favorites"));
@@ -35,15 +41,20 @@ const App = ({ addBaseCurrency, setFavorites, updateMainCurrency }) => {
       let localStorageBaseCurrency = JSON.parse(
         localStorage.getItem("baseCurrency")
       );
+      let localStorageTargetCurrency = JSON.parse(
+        localStorage.getItem("targetCurrency")
+      );
       const userBaseCurrency = localStorageBaseCurrency ?? "EUR";
+      const userTargetCurrency = localStorageTargetCurrency ?? "USD";
       //const baseData = userBaseCurrency === "EUR" ? data.eur : data.usd; // отладочное решение
       const baseData = await getCurrency(userBaseCurrency);
       addBaseCurrency({ baseCurrency: baseData });
       setFavorites({ favorites: usersFavorites });
       updateMainCurrency({ mainCurrency: userBaseCurrency });
+      updateTargetCurrency({ targetCurrency: userTargetCurrency });
     }
     request();
-  }, [addBaseCurrency, setFavorites, updateMainCurrency]);
+  }, [addBaseCurrency, setFavorites, updateMainCurrency, updateTargetCurrency]);
 
   return (
     <Router basename="/">

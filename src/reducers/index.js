@@ -8,21 +8,13 @@ const inputs = handleActions(
       return { ...state, text };
     },
     [actions.updateMainCurrency](state, { payload: { mainCurrency } }) {
-      return { ...state, mainCurrency };
+      return { ...state, convertationResult: null, mainCurrency };
     },
     [actions.updateTargetCurrency](state, { payload: { targetCurrency } }) {
-      return { ...state, targetCurrency };
+      return { ...state, targetCurrency, convertationResult: null };
     },
     [actions.updateAmount](state, { payload: { amount } }) {
-      return { ...state, amount };
-    },
-    [actions.reverseCurrencies](state) {
-      const { mainCurrency, targetCurrency } = state;
-      return {
-        ...state,
-        mainCurrency: targetCurrency,
-        targetCurrency: mainCurrency,
-      };
+      return { ...state, convertationResult: null, amount };
     },
     [actions.executeConvertation](state, { payload: { convertationResult } }) {
       return { ...state, convertationResult };

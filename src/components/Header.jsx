@@ -15,10 +15,10 @@ const Header = ({ currencies: { baseCurrency } }) => {
   return (
     <section className="header">
       <div className="row justify-content-md-center">
-        <p className="h2 text-center text-light pb-4">
-          Currency converter and exchange rates fo 160 currencies!
-        </p>
         <div className="col col-lg-9">
+          <p className="h2 text-center text-light pb-4">
+            Currency converter and exchange rates fo 160 currencies!
+          </p>
           <p className="h5">
             Base currency:{" "}
             <span className="text-light">
