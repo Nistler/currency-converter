@@ -3,7 +3,8 @@ import Converter from "./Converter";
 import Rates from "./Rates";
 import "../styles/App.css";
 import Nav from "./Nav";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+//import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { HashRouter as Router, Switch, Route } from "react-router-dom"; // решение для gh-pages
 // import * as data from "../__fixtures__/data"; // отладочное решение
 import { defaultFavoriteCurrencies } from "../constants/main-currencies";
 import * as actions from "../actions";
@@ -45,7 +46,7 @@ const App = ({ addBaseCurrency, setFavorites, updateMainCurrency }) => {
   }, [addBaseCurrency, setFavorites, updateMainCurrency]);
 
   return (
-    <Router>
+    <Router basename="/">
       <BackgroundVideo />
       <Nav />
       <main className="container-md">
