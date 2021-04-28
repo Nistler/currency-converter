@@ -21,7 +21,6 @@ const Rates = ({
 }) => {
   const handleAddFavorites = ({ target }) => {
     addFavorite({ label: target.id });
-    localStorage.setItem("favorites", JSON.stringify(favorites));
   };
 
   const setNewTargetCurrency = ({ target }) =>
@@ -47,16 +46,16 @@ const Rates = ({
   };
 
   return (
-    <section>
+    <section className="content">
       <div className="row justify-content-md-center">
-        <div className="col col-lg-8">
+        <div className="col col-lg-9">
           <div className="card text-dark bg-light">
             <div className="card-body">
               <p className="h1">All exchange rates:</p>
               <div className="row ">
-                <div className="col-6">Currency</div>
-                <div className="col-3">Rate</div>
-                <div className="col-3">
+                <div className="col">Currency</div>
+                <div className="col col-sm-3 text-center">Rate</div>
+                <div className="col col-sm-3">
                   <div className="text-end"> Favorite</div>
                 </div>
               </div>

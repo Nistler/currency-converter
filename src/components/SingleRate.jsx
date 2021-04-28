@@ -31,12 +31,12 @@ const SingleRate = ({
           <span> {currency}</span>
           <span className="full-country-label">
             {" "}
-            | {countryByLabel[currency]}
+            {countryByLabel[currency]}
           </span>
         </Link>
       </div>
-      <div className="col-3">{rate}</div>
-      <div className="col-3">
+      <div className="col col-sm-3 text-center">{rate}</div>
+      <div className="col col-sm-3">
         <div className="text-end">
           <button
             disabled={disabled}

@@ -7,10 +7,9 @@ import { convertation, validation } from "../utils/calculations";
 import { twoDigits } from "../utils/normalization";
 import Select from "react-select";
 import { allSelectOptions } from "../constants/select-options";
-import * as labels from "../__fixtures__/data";
-import swapIcon from "../media/Swap.png";
-import SingleRate from "./SingleRate"; // удалить!!
-//import { getCurrency } from "../services/ratesAPI";
+import swapIcon from "../media/Swap.svg";
+import SingleRate from "./SingleRate";
+import { getCurrency } from "../services/ratesAPI";
 
 const mapStateToProps = (state) => {
   return {
@@ -50,7 +49,6 @@ const Converter = ({
 }) => {
   const handleRemoveFavorites = ({ target }) => {
     removeFavorite({ label: target.id });
-    localStorage.setItem("favorites", JSON.stringify(favorites));
   };
 
   const setNewTargetCurrency = ({ target }) =>
@@ -89,13 +87,12 @@ const Converter = ({
     if (!currency) {
       return;
     }
-    const index = allSelectOptions.findIndex(({ value }) => value === currency);
     return (
-      <div>
+      <div className="ps-1">
         <span
           className={`currency-flag currency-flag-${currency.toLowerCase()}`}
         />
-        <span> {allSelectOptions[index].label}</span>
+        <span> {currency}</span>
       </div>
     );
   };
@@ -130,8 +127,8 @@ const Converter = ({
 
   const handleUpdateMainCurrency = async ({ value }) => {
     updateMainCurrency({ mainCurrency: value });
-    //const newBaseCurrency = await getCurrency(value); // !! Запрос работает !!
-    const newBaseCurrency = labels[value.toLowerCase()];
+    const newBaseCurrency = await getCurrency(value); // !! Запрос работает !!
+    //const newBaseCurrency = labels[value.toLowerCase()];
     addBaseCurrency({ baseCurrency: newBaseCurrency });
     localStorage.setItem("baseCurrency", JSON.stringify(value));
     return newBaseCurrency;
@@ -171,9 +168,9 @@ const Converter = ({
   ];
 
   return (
-    <section>
+    <section className="content">
       <div className="row justify-content-md-center">
-        <div className="col col-lg-8">
+        <div className="col col-lg-9">
           <div className="card text-dark bg-light">
             <div className="card-body">
               {/* quick convertation form */}
@@ -331,17 +328,17 @@ const Converter = ({
         </div>
       </div>
       <div className="row justify-content-md-center">
-        <div className="col col-lg-8 mt-5">
+        <div className="col col-lg-9 my-5">
           {/* rates */}
           <div className="card text-dark bg-light">
             <div className="card-body">
               <p className="h5 card-title text-center">Favorites</p>
               <div className="row">
-                <div className="col-6">Currency</div>
-                <div className="col-3">
-                  <div>Rate</div>
+                <div className="col">Currency</div>
+                <div className="col col-sm-3">
+                  <div className="text-center">Rate</div>
                 </div>
-                <div className="col-3">
+                <div className="col col-sm-3">
                   <div className="text-end">Favorite</div>
                 </div>
               </div>

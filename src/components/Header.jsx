@@ -15,7 +15,10 @@ const Header = ({ currencies: { baseCurrency } }) => {
   return (
     <section className="header">
       <div className="row justify-content-md-center">
-        <div className="col col-lg-8">
+        <p className="h2 text-center text-light pb-4">
+          Currency converter and exchange rates fo 160 currencies!
+        </p>
+        <div className="col col-lg-9">
           <p className="h5">
             Base currency:{" "}
             <span className="text-light">
@@ -25,7 +28,7 @@ const Header = ({ currencies: { baseCurrency } }) => {
           <p className="h6">
             Exchange rates on{" "}
             <span className="text-light">
-              {time_last_update_utc.slice(0, 25)}
+              {time_last_update_utc.slice(0, 25)} UTC
             </span>
           </p>
         </div>

@@ -46,15 +46,19 @@ const currencies = handleActions(
       return { baseCurrency, favorites };
     },
     [actions.addFavorite]({ baseCurrency, favorites }, { payload: { label } }) {
-      return { baseCurrency, favorites: [...favorites, label] };
+      const newFavorites = [...favorites, label];
+      localStorage.setItem("favorites", JSON.stringify(newFavorites));
+      return { baseCurrency, favorites: newFavorites };
     },
     [actions.removeFavorite](
       { baseCurrency, favorites },
       { payload: { label } }
     ) {
+      const newFavorites = favorites.filter((curr) => curr !== label);
+      localStorage.setItem("favorites", JSON.stringify(newFavorites));
       return {
         baseCurrency,
-        favorites: favorites.filter((curr) => curr !== label),
+        favorites: newFavorites,
       };
     },
   },
