@@ -17,7 +17,7 @@ const Header = ({ currencies: { baseCurrency } }) => {
       <div className="row justify-content-md-center">
         <div className="col col-lg-9">
           <p className="h2 text-center text-light pb-4">
-            Currency converter and exchange rates fo 160 currencies!
+            Currency converter and exchange rates for 160 currencies!
           </p>
           <p className="h5">
             Base currency:{" "}
