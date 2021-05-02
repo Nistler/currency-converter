@@ -47,24 +47,22 @@ const Rates = ({
 
   return (
     <section className="content">
-      <div className="row justify-content-md-center">
-        <div className="col col-lg-9">
-          <div className="card text-dark bg-light">
-            <div className="card-body">
-              <p className="h1">All exchange rates:</p>
-              <div className="row ">
-                <div className="col">Currency</div>
-                <div className="col col-sm-3 text-center">Rate</div>
-                <div className="col col-sm-3">
-                  <div className="text-end"> Favorite</div>
-                </div>
+      <article className="row justify-content-md-center">
+        <div className="col col-lg-9 card text-dark bg-light">
+          <div className="card-body">
+            <p className="h1">All exchange rates:</p>
+            <div className="row ">
+              <div className="col">Currency</div>
+              <div className="col col-sm-3 text-center">Rate</div>
+              <div className="col col-sm-3">
+                <div className="text-end"> Favorite</div>
               </div>
-              {baseCurrency.conversion_rates &&
-                renderRates(baseCurrency.conversion_rates)}
             </div>
+            {baseCurrency.conversion_rates &&
+              renderRates(baseCurrency.conversion_rates)}
           </div>
         </div>
-      </div>
+      </article>
     </section>
   );
 };

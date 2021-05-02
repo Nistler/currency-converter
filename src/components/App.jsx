@@ -60,8 +60,8 @@ const App = ({
     <Router basename="/">
       <BackgroundVideo />
       <Nav />
+      <Header />
       <main className="container-md">
-        <Header />
         <Switch>
           <Route path="/" exact component={Converter} />
           <Route path="/Rates" component={Rates} />

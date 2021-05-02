@@ -18,14 +18,12 @@ video {
 
 .header {
   color: #8c8d8e;
-  text-align: center;
+  position: relative;
+  margin-top: 60px;
   padding-top: 20px;
+  text-align: center;
   padding-bottom: 20px;
   text-shadow: 0 0 5px rgba(25, 26, 29, 1);
-}
-
-.header > p {
-
 }
 
 .content {
@@ -41,7 +39,6 @@ video {
 }
 
 main {
-  padding-top: 60px;
   position: relative;
 }
 

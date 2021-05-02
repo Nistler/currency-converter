@@ -19,7 +19,7 @@ const SingleRate = ({
     ? "btn btn-danger btn-remove"
     : "btn btn-success btn-add";
   return (
-    <div className="row rate-shadow border text-dark bg-light align-items-center mt-3">
+    <article className="row rate-shadow border text-dark bg-light align-items-center mt-3">
       <div className="col d-grid ps-0">
         <Link
           to="/"
@@ -48,7 +48,7 @@ const SingleRate = ({
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 };
 

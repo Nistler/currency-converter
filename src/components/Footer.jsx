@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <section className="footer fixed-bottom text-center">
+    <footer className="footer fixed-bottom text-center">
       <div>
         This is a portfolio project built with React/Redux. You can see the
         description and source code in my{" "}
@@ -21,7 +21,7 @@ const Footer = () => {
           do not abuse the base currency change.
         </span>
       </div>
-    </section>
+    </footer>
   );
 };
 

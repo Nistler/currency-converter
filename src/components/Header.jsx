@@ -13,7 +13,7 @@ const actionCreators = {};
 const Header = ({ currencies: { baseCurrency } }) => {
   const { base_code, time_last_update_utc } = baseCurrency;
   return (
-    <section className="header">
+    <header className="header container-md">
       <div className="row justify-content-md-center">
         <div className="col col-lg-9">
           <p className="h2 text-center text-light pb-4">
@@ -33,7 +33,7 @@ const Header = ({ currencies: { baseCurrency } }) => {
           </p>
         </div>
       </div>
-    </section>
+    </header>
   );
 };
 
